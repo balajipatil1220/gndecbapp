@@ -63,9 +63,11 @@ model User {
   gender        Gender?
   address       String?
 
-  role    Role
-  Account Account[]
-  Session Session[]
+  role         Role
+  Account      Account[]
+  Session      Session[]
+  TaskReminder TaskReminder[]
+  Maintenance  Maintenance[]
 
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
@@ -83,4 +85,63 @@ enum Gender {
   MALE
   FEMALE
   OTHERS
+}
+
+model TaskReminder {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  renewalDate DateTime
+  status      TaskStatus
+  userId      String     @db.ObjectId
+  imageURL    String?
+
+  createdBy User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum TaskStatus {
+  PENDING
+  COMPLETED
+  INPROGRESS
+}
+
+model Maintenance {
+  id                String            @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  description       String?
+  categoryID        String            @db.ObjectId
+  MaintenanceType   MaintenanceType
+  requestedByuserId String            @db.ObjectId
+  status            MaintenanceStatus
+  imageURL          String?
+
+  MaintenanceRemarks MaintenanceRemarks?
+
+  requestedBy         User                @relation(fields: [requestedByuserId], references: [id], onDelete: Cascade)
+  maintenanceCategory MaintenanceCategory @relation(fields: [categoryID], references: [id], onDelete: Cascade)
+}
+
+model MaintenanceCategory {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  Maintenance Maintenance[]
+}
+
+enum MaintenanceType {
+  NEW
+  RENOVATION
+  DELETION
+}
+
+enum MaintenanceStatus {
+  PENDING
+  COMPLETED
+  REJECTED
+}
+
+model MaintenanceRemarks {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  maintenanceId String      @unique @db.ObjectId
+  text          String
+  maintenance   Maintenance @relation(fields: [maintenanceId], references: [id], onDelete: Cascade)
 }
