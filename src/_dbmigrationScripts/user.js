@@ -3,8 +3,6 @@ const bcrypt = require('bcryptjs');
 
 const prisma = new PrismaClient();
 
-const { z } = require('zod');
-
 async function run() {
   try {
     const salt = await bcrypt.genSalt(10);
