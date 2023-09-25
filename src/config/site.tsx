@@ -1,5 +1,5 @@
 export const siteConfig = {
-  name: "GNDECB App",
+  name: "GNDECB APP",
   url: "",
   ogImage: "",
   description:

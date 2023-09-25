@@ -18,6 +18,39 @@ async function run() {
       },
     });
 
+    await prisma.privilege.create({
+      data: {
+        userId: user.id,
+        permissions: {
+          createMany: {
+            data: [
+              {
+                moduleName: 'STAFFMODULE',
+                Read: true,
+                Write: true,
+                Update: true,
+                Delete: true,
+              },
+              {
+                moduleName: 'REMAINDER',
+                Read: true,
+                Write: true,
+                Update: true,
+                Delete: true,
+              },
+              {
+                moduleName: 'MAINTENANCE',
+                Read: true,
+                Write: true,
+                Update: true,
+                Delete: true,
+              },
+            ],
+          },
+        },
+      },
+    });
+
     console.log(user.id + ' user created');
   } catch (error) {
     console.log(error);

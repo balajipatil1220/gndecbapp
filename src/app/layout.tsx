@@ -4,10 +4,10 @@ import { ThemeProvider } from "@/components/provider"
 import "@/styles/globals.css"
 
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Poppins } from "next/font/google"
 import { Toaster } from "react-hot-toast"
 
-const inter = Inter({ subsets: ["latin"] })
+const poppins = Poppins({ weight: "400", subsets: ["devanagari"] });
 
 export const metadata: Metadata = {
   title: "Gndecb App",
@@ -24,8 +24,8 @@ export default function RootLayout({
       <head />
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          inter.className
+          "min-h-screen bg-background font-sans tracking-wide antialiased",
+          poppins.className
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

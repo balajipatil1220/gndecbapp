@@ -45,7 +45,7 @@ export function MobileNav() {
                 item.href && (
                   <MobileLink
                     key={`${item.href}`}
-                    href={`/${params.Institutionslug}${item.href}`}
+                    href={`/${item.href}`}
                     onOpenChange={setOpen}
                   >
                     {item.title}
@@ -63,12 +63,12 @@ export function MobileNav() {
                       {!item.disabled &&
                         (item.href ? (
                           <MobileLink
-                            href={`/${params.Institutionslug}${item.href}`}
+                            href={`/${item.href}`}
                             onOpenChange={setOpen}
                             className="text-muted-foreground"
                           >
                             <div className="item-center flex space-x-4 font-semibold ">
-                              <span> {item.icon && <item.icon className="my-1 h-4 w-4" color={`${item.colourCode}`} />}</span>
+                              <span> {item.icon && <item.icon className="my-1 h-4 w-4" />}</span>
                               <span>{item.title}</span></div>
 
                           </MobileLink>
