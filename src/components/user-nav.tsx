@@ -23,7 +23,7 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
       <DropdownMenuTrigger>
         <Avatar className="h-8 w-8">
           <AvatarImage src={`${user.image}`} alt={`${user.name}`} />
-          <AvatarFallback className="bg-primary text-white">{user.name?.charAt(0)}</AvatarFallback>
+          <AvatarFallback className="">{user.name?.charAt(0)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

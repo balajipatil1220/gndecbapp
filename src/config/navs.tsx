@@ -36,7 +36,7 @@ export const Navs: Navs = {
         }, {
           id: "aNLBJK",
           title: "Maintenance",
-          href: "/reminders",
+          href: "/maintenance",
           icon: Settings,
           items: []
         }, {

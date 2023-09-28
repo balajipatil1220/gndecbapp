@@ -8,6 +8,47 @@ import { db } from '@/lib/db';
 import { hasPrivileges, PermissionType } from '@/lib/server-utils';
 import { getCurrentUser } from '@/lib/session';
 
+export async function GET(request: Request) {
+  try {
+    const user = await getCurrentUser();
+
+    const { searchParams } = new URL(request.url);
+
+    if (!user) {
+      return new NextResponse('Unauthenticated', { status: 403 });
+    }
+
+    const IsUserExits = await db.user.findFirst({
+      where: {
+        id: user.id,
+      },
+    });
+
+    if (!IsUserExits) {
+      return new NextResponse('Unauthenticated', { status: 403 });
+    }
+
+    if (
+      !(await hasPrivileges(IsUserExits, 'STAFFMODULE', PermissionType.Read))
+    ) {
+      return new NextResponse('Unauthenticated', { status: 403 });
+    }
+
+    const staffs = await db.user.findMany({});
+
+    if (!staffs) {
+      return new NextResponse('staffs not found', { status: 403 });
+    }
+
+    return new NextResponse(JSON.stringify(staffs), { status: 200 });
+  } catch (error: any) {
+    console.log('[Staff_GET]', error);
+    return new NextResponse(JSON.stringify({ msg: error.message }), {
+      status: 500,
+    });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();

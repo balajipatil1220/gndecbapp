@@ -30,8 +30,10 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Toaster />
-          <div>
-            {children}
+          <div className="relative flex min-h-screen flex-col">
+            <div className="flex-1">
+              {children}
+            </div>
           </div>
         </ThemeProvider>
       </body>

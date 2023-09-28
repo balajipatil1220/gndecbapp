@@ -28,11 +28,12 @@ const Search = ({ search }: { search?: string }) => {
     }, [query])
 
     return (
-        <div className="relative mb-5 mt-8">
+        <div className="">
             <Input
                 value={text}
                 placeholder='Search name...'
                 onChange={e => setText(e.target.value)}
+                className="h-8 w-[150px] lg:w-[250px]"
             />
         </div>
     )

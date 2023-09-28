@@ -13,7 +13,7 @@ export function MainNav() {
   return (
     <div className="mr-4 hidden md:flex">
       <Link href="/" className="mr-2 flex items-center space-x-2">
-        <span className="hidden text-2xl font-bold text-primary sm:inline-block">
+        <span className="text-gradient hidden bg-gradient-to-r  from-blue-500 via-purple-500 to-yellow-300 bg-clip-text text-2xl font-bold text-transparent sm:inline-block">
           {siteConfig.name}
         </span>
       </Link>

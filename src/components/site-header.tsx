@@ -11,7 +11,7 @@ interface SiteHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function SiteHeader({ user }: SiteHeaderProps) {
   return (
-    <header className="supports-backdrop-blur:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
+    <header className="supports-backdrop-blur:bg-background/60 sticky top-0 z-50 w-full border-b shadow-md backdrop-blur md:shadow-none">
       <div className="flex h-14 items-center p-6 max-xl:p-6">
         <MainNav />
         <MobileNav />

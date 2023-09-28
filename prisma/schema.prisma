@@ -63,15 +63,17 @@ model User {
   gender        Gender?
   address       String?
 
-  role         Role
-  Account      Account[]
-  Session      Session[]
-  TaskReminder TaskReminder[]
-  Maintenance  Maintenance[]
-  Privilege    Privilege?
+  role          Role
+  Account       Account[]
+  Session       Session[]
+  RemainderTags RemainderTags[]
+  Remainder     Remainder[]
 
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
+  Privilege Privilege?
+
+  createdAt   DateTime      @default(now()) @map(name: "created_at")
+  updatedAt   DateTime      @default(now()) @map(name: "updated_at")
+  Maintenance Maintenance[]
 
   @@map(name: "users")
 }
@@ -120,36 +122,51 @@ enum ModuleName {
   MAINTENANCE
 }
 
-model TaskReminder {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
+model Remainder {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
   description String?
-  renewalDate DateTime
-  status      TaskStatus
-  userId      String     @db.ObjectId
+  duedate     DateTime
+  status      remainderStatus
+  tags        RemainderTags[]
+  userId      String          @db.ObjectId
   imageURL    String?
 
   createdBy User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
 }
 
-enum TaskStatus {
+enum remainderStatus {
   PENDING
-  COMPLETED
   INPROGRESS
+  COMPLETED
+  EXPIRED
+}
+
+model RemainderTags {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String @db.ObjectId
+  remainderId String @db.ObjectId
+
+  Remainder Remainder @relation(fields: [remainderId], references: [id], onDelete: Cascade)
+  User      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
 }
 
 model Maintenance {
-  id                String            @id @default(auto()) @map("_id") @db.ObjectId
-  name              String
-  description       String?
-  categoryID        String            @db.ObjectId
-  MaintenanceType   MaintenanceType
-  requestedByuserId String            @db.ObjectId
-  status            MaintenanceStatus
-  imageURL          String?
-
-  MaintenanceRemarks MaintenanceRemarks?
-
+  id                  String              @id @default(auto()) @map("_id") @db.ObjectId
+  name                String
+  description         String?
+  categoryID          String              @db.ObjectId
+  MaintenanceType     MaintenanceType
+  requestedByuserId   String              @db.ObjectId
+  status              MaintenanceStatus
+  imageURL            String?
+  MaintenanceRemarks  MaintenanceRemarks?
   requestedBy         User                @relation(fields: [requestedByuserId], references: [id], onDelete: Cascade)
   maintenanceCategory MaintenanceCategory @relation(fields: [categoryID], references: [id], onDelete: Cascade)
 }
@@ -168,6 +185,7 @@ enum MaintenanceType {
 
 enum MaintenanceStatus {
   PENDING
+  INPROGRESS
   COMPLETED
   REJECTED
 }

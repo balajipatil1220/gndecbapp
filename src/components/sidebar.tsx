@@ -28,7 +28,7 @@ export function Sidebar() {
                     className={cn(
                       item.disabled && "cursor-not-allowed opacity-60",
                       pathname.startsWith(`${item.href}`) &&
-                      buttonVariants({ variant: "default" }),
+                      buttonVariants({ variant: "secondary" }),
                       !pathname.startsWith(`${item.href}`) &&
                       buttonVariants({ variant: "ghost" }),
                       " w-full justify-start text-start"

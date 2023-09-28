@@ -83,8 +83,8 @@ export function DataTable<TData, TValue>({
       desc: order
         ? order === "desc"
         : defaultSorting?.val
-        ? defaultSorting.val === "desc"
-        : true,
+          ? defaultSorting.val === "desc"
+          : true,
     },
   ]);
 
@@ -144,7 +144,7 @@ export function DataTable<TData, TValue>({
                 newRowLink={newRowLink}
                 deleteRowsAction={deleteRowsAction}
               />
-              <div className="rounded-md border">
+              <div className="mt-4 rounded-md border">
                 <Table>{children}</Table>
               </div>
             </div>

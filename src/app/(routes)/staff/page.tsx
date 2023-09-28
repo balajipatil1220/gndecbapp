@@ -20,7 +20,7 @@ const getData = async (take: number,
                 skip,
                 where: {
                     role: {
-                        in: ["ADMIN", "STAFF", "SUPERADMIN"], // Include only these roles
+                        in: ["ADMIN", "STAFF", "SUPERADMIN"],
                     },
                     OR: [
                         {
@@ -51,7 +51,7 @@ const getData = async (take: number,
                 skip,
                 where: {
                     role: {
-                        in: ["ADMIN", "STAFF", "SUPERADMIN"], // Include only these roles
+                        in: ["ADMIN", "STAFF", "SUPERADMIN"],
                     },
                     OR: [
                         {
@@ -108,7 +108,7 @@ const page = async ({
     const { page, per_page, query } = searchParams;
 
     // Number of records to show per page
-    const take = typeof per_page === "string" ? parseInt(per_page) : 5;
+    const take = typeof per_page === "string" ? parseInt(per_page) : 30;
 
     // Number of records to skip
     const skip = typeof page === "string" ? (parseInt(page) - 1) * take : 0;
