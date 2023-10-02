@@ -63,7 +63,7 @@ export function MobileNav() {
                       {!item.disabled &&
                         (item.href ? (
                           <MobileLink
-                            href={`/${item.href}`}
+                            href={`${item.href}`}
                             onOpenChange={setOpen}
                             className="text-muted-foreground"
                           >
