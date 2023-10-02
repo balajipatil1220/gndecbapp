@@ -12,8 +12,6 @@ export default async function AuthLayout({ children }: AuthLayoutProps) {
   const user = await getCurrentUser()
 
   if (user) {
-    console.log(user, "user is present auth");
-
     redirect("/dashboard")
   }
 

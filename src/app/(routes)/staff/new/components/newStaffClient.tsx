@@ -17,15 +17,16 @@ import {
 import { Input } from "@/components/ui/input"
 import { ArrowLeft, Loader2, RotateCw } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { ModuleName } from "@prisma/client";
+import { ModuleName, Role } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
-import { PrivilegeFormField } from "./privilegeField";
+import { useEffect, useState } from "react";
+import { ModuleNames, PrivilegeFormField } from "./privilegeField";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import { env } from "@/env.mjs";
 import toast from "react-hot-toast";
+import { PermissionType } from "@/lib/server-utils";
 
 export const StaffformSchema = z.object({
     name: z.string().min(3, "minimum 3 chars required"),
@@ -66,13 +67,15 @@ const NewStaffForm = () => {
             Privilege: {
                 permissions: [
                     "STAFFMODULE", "REMAINDER", "MAINTENANCE"
-                ].map((moduleName: any) => ({
-                    moduleName,
-                    Read: false,
-                    Write: false,
-                    Update: false,
-                    Delete: false,
-                })),
+                ].map((moduleName: any) => {
+                    return {
+                        moduleName,
+                        Read: false,
+                        Write: false,
+                        Update: false,
+                        Delete: false,
+                    }
+                }),
             },
         },
     })
@@ -110,6 +113,45 @@ const NewStaffForm = () => {
 
         }
     }
+
+
+    function AutoSelectPrivilege(role: Role) {
+        if (role == "ADMIN") {
+            ModuleNames.forEach((mn, i) => {
+                form.setValue(`Privilege.permissions.${i}.Read`, true)
+                form.setValue(`Privilege.permissions.${i}.Write`, true)
+                form.setValue(`Privilege.permissions.${i}.Update`, true)
+                form.setValue(`Privilege.permissions.${i}.Delete`, true)
+            })
+        } else if (role == "SUPERADMIN") {
+            ModuleNames.forEach((mn, i) => {
+                form.setValue(`Privilege.permissions.${i}.Read`, true)
+                form.setValue(`Privilege.permissions.${i}.Write`, true)
+                form.setValue(`Privilege.permissions.${i}.Update`, true)
+                form.setValue(`Privilege.permissions.${i}.Delete`, true)
+            })
+        } else {
+            ModuleNames.forEach((mn, i) => {
+                if (mn == "Maintenance") {
+                    form.setValue(`Privilege.permissions.${i}.Read`, true)
+                    form.setValue(`Privilege.permissions.${i}.Write`, true)
+                    form.setValue(`Privilege.permissions.${i}.Update`, false)
+                    form.setValue(`Privilege.permissions.${i}.Delete`, false)
+                } else {
+                    form.setValue(`Privilege.permissions.${i}.Read`, false)
+                    form.setValue(`Privilege.permissions.${i}.Write`, false)
+                    form.setValue(`Privilege.permissions.${i}.Update`, false)
+                    form.setValue(`Privilege.permissions.${i}.Delete`, false)
+                }
+            })
+        }
+    }
+
+    useEffect(() => {
+        AutoSelectPrivilege("STAFF")
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
 
     return < >
         <div className="container mt-6 flex h-full w-full max-w-[60rem] flex-col space-y-4 rounded-md border p-4 shadow-md">
@@ -219,7 +261,10 @@ const NewStaffForm = () => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Staff Roles<span className="text-red-700"> *</span></FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select onValueChange={(value: string) => {
+                                        AutoSelectPrivilege(value as Role)
+                                        field.onChange(value)
+                                    }} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select a verified email to display" />
@@ -282,5 +327,6 @@ const NewStaffForm = () => {
         </div>
     </>
 };
+
 
 export default NewStaffForm;

@@ -22,10 +22,14 @@ import { useParams, useRouter } from "next/navigation"
 import { useState } from "react"
 import axios from "axios"
 import toast from "react-hot-toast"
+import { RemainderformSchema } from "./reminderEditForm"
+import * as z from "zod"
 
+interface RemainderSchema extends z.infer<typeof RemainderformSchema> {
+    id: string
+}
 
-
-export function DataTableRowActions({ id }: { id: string }) {
+export function DataTableRowActions({ data }: { data: RemainderSchema }) {
     const router = useRouter();
     const params = useParams();
     const [open, setOpen] = useState(false);
@@ -34,8 +38,8 @@ export function DataTableRowActions({ id }: { id: string }) {
     const onConfirm = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/reminder/${id}`);
-            toast.success('Staff deleted.');
+            await axios.delete(`/api/reminder/${data.id}`);
+            toast.success('reminder deleted.');
             router.refresh();
         } catch (error) {
             toast.error('Something Gone Wrong');
@@ -55,6 +59,8 @@ export function DataTableRowActions({ id }: { id: string }) {
                 loading={loading}
                 description="This data will be deleted permanent"
             />
+
+
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button
@@ -66,7 +72,7 @@ export function DataTableRowActions({ id }: { id: string }) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="">
-                    <DropdownMenuItem>  <Edit className="mr-2 h-4 w-4" /> Update</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push(`/reminder/${data.id}/edit`)}>  <Edit className="mr-2 h-4 w-4" /> Update</DropdownMenuItem>
                     <DropdownMenuItem><Pin className="mr-2 h-4 w-4" /> Pin</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setOpen(true)}>

@@ -42,24 +42,28 @@ export const PrivilegeFormField = ({ form }: { form: UseFormReturn<z.infer<typeo
                                                 <div className="grid grid-cols-4 items-center gap-2">
                                                     <FormControl>
                                                         <Checkbox
+                                                            disabled={form.watch("role") == "STAFF"}
                                                             checked={form.watch(`Privilege.permissions.${i}.Read`)}
                                                             onCheckedChange={(checked) => form.setValue(`Privilege.permissions.${i}.Read`, checked as boolean)}
                                                         />
                                                     </FormControl>
                                                     <FormControl>
                                                         <Checkbox
+                                                            disabled={form.watch("role") == "STAFF"}
                                                             checked={form.watch(`Privilege.permissions.${i}.Write`)}
                                                             onCheckedChange={(checked) => form.setValue(`Privilege.permissions.${i}.Write`, checked as boolean)}
                                                         />
                                                     </FormControl>
                                                     <FormControl>
                                                         <Checkbox
+                                                            disabled={form.watch("role") == "STAFF"}
                                                             checked={form.watch(`Privilege.permissions.${i}.Update`)}
                                                             onCheckedChange={(checked) => form.setValue(`Privilege.permissions.${i}.Update`, checked as boolean)}
                                                         />
                                                     </FormControl>
                                                     <FormControl>
                                                         <Checkbox
+                                                            disabled={form.watch("role") == "STAFF"}
                                                             checked={form.watch(`Privilege.permissions.${i}.Delete`)}
                                                             onCheckedChange={(checked) => form.setValue(`Privilege.permissions.${i}.Delete`, checked as boolean)}
                                                         />
@@ -80,7 +84,7 @@ export const PrivilegeFormField = ({ form }: { form: UseFormReturn<z.infer<typeo
 };
 
 
-const ModuleNames = [
+export const ModuleNames = [
     "Staff", "Remainder", "Maintenance"
 ]
 

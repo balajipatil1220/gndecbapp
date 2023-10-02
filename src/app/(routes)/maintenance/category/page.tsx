@@ -1,9 +1,9 @@
 import React from "react";
 import CategoryClient from "./components/categoryClient";
 import { db } from "@/lib/db";
+import { getCurrentUser } from "@/lib/session";
 
 const getData = async () => {
-
     try {
         const categories = await db.maintenanceCategory.findMany();
         return categories;
@@ -13,9 +13,14 @@ const getData = async () => {
 };
 
 const Categorypage = async () => {
+    const user = await getCurrentUser()
+
+    const isAdmin = (user?.role == "ADMIN" || user?.role == "SUPERADMIN") ? true : false
+
     const categories = await getData()
+
     return <>
-        <CategoryClient categories={categories} />
+        <CategoryClient isAdmin={isAdmin} categories={categories} />
     </>
 };
 

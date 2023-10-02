@@ -1,5 +1,5 @@
 "use client"
-
+import * as z from "zod"
 import { Heading } from "@/components/heading";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,11 +21,15 @@ import {
 import { Bell, CircleDot, CircleEllipsis } from "lucide-react";
 import { CheckCircledIcon, CrossCircledIcon, QuestionMarkCircledIcon, StopwatchIcon } from "@radix-ui/react-icons";
 import { Badge } from "@/components/ui/badge";
-import ReminderPagination from "./pagination";
+import ReminderPagination from "../../../../components/pagination";
 import { DataTableRowActions } from "./cell-action";
+import { RemainderformSchema } from "./reminderEditForm";
 
+interface RemainderSchema extends z.infer<typeof RemainderformSchema> {
+    id: string
+}
 
-const RemainderClient = ({ remainders, pageCount }: { remainders: Remainder[], pageCount: number }) => {
+const RemainderClient = ({ remainders, pageCount }: { remainders: RemainderSchema[], pageCount: number }) => {
 
     const router = useRouter()
 
@@ -62,7 +66,7 @@ const RemainderClient = ({ remainders, pageCount }: { remainders: Remainder[], p
                                     {remainder.description?.slice(0, 50)}
                                     {remainder.description && remainder.description?.length > 50 ? "..." : ""}
                                 </TableCell>
-                                <TableCell >{remainder.duedate.toDateString()}</TableCell>
+                                <TableCell >{new Date(remainder.duedate).toDateString()}</TableCell>
                                 <TableCell className="flex items-center justify-center gap-2">
                                     <Badge variant={"outline"} className="p-2">
                                         <GetStatusIcon status={remainder.status} />
@@ -70,7 +74,7 @@ const RemainderClient = ({ remainders, pageCount }: { remainders: Remainder[], p
                                     </Badge>
                                 </TableCell>
                                 <TableCell>
-                                    <DataTableRowActions id={remainder.id} />
+                                    <DataTableRowActions data={remainder} />
                                 </TableCell>
                             </TableRow>
                         ))}

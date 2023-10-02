@@ -15,15 +15,17 @@ import {
 import { Maintenance, MaintenanceStatus } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircledIcon, CrossCircledIcon, StopwatchIcon } from "@radix-ui/react-icons";
-import { DataTableRowActions } from "../../reminder/components/cell-action";
-import ReminderPagination from "../../reminder/components/pagination";
+import ReminderPagination from "../../../../components/pagination";
+import { DataTableRowActions } from "./cell-action";
+import Search from "@/components/data-table/search";
 
 interface IMaintenance extends Maintenance {
-    requestedBy: { name: string }
+    requestedBy: { name: string },
+    category: string,
 }
 
-const MaintenanceClient = ({ maintenances, pageCount }: { maintenances: IMaintenance[], pageCount: number }) => {
-    return <div className="h-full flex-1 flex-col space-y-8 rounded-sm border p-4 pt-10 md:flex md:p-8">
+const MaintenanceClient = ({ maintenances, pageCount, isAdmin }: { maintenances: IMaintenance[], pageCount: number, isAdmin: boolean }) => {
+    return <div className="h-full flex-1 flex-col space-y-8 p-1 pt-4 md:flex md:rounded-sm md:border md:p-8 md:pt-10">
         <div className="flex items-center justify-between space-y-2">
             <div>
                 <h2 className="flex items-center gap-2 text-lg font-bold md:text-2xl ">Maintenances <Settings2 className="h-4 w-4 stroke-primary md:h-auto md:w-auto" /></h2>
@@ -37,26 +39,32 @@ const MaintenanceClient = ({ maintenances, pageCount }: { maintenances: IMainten
                 </Link>
             </div>
         </div>
-        <div className="mt-5 h-full whitespace-nowrap rounded-lg border shadow-md">
+        <div className="w-full">
+            <Search />
+        </div>
+        <div className="mt-5 h-full whitespace-nowrap md:rounded-lg md:border md:shadow-md">
             <Table className="">
                 <TableHeader>
                     <TableRow>
                         <TableHead>Title</TableHead>
-                        <TableHead>Description</TableHead>
+                        {/* <TableHead>Description</TableHead> */}
+                        <TableHead>Requested By</TableHead>
                         <TableHead>Type</TableHead>
                         <TableHead className="text-center">Status</TableHead>
+                        <TableHead className="text-center">Category</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {maintenances.map((m, i) => (
                         <TableRow key={m.id} className={cn(i % 2 ? "bg-muted/50 hover:bg-transparent" : "hover:bg-muted/100")}>
-                            <TableCell className="font-medium">{m.name}</TableCell>
-                            <TableCell>
+                            <TableCell className="font-medium"><span className="md:hidden">{i + 1})</span> {m.name}</TableCell>
+                            <TableCell> {m.requestedBy.name}</TableCell>
+                            {/* <TableCell>
                                 {m.description?.slice(0, 50)}
                                 {m.description && m.description?.length > 50 ? "..." : ""}
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell >
-                                <Badge variant={"default"} className="p-2">
+                                <Badge variant={"outline"} className="p-2">
                                     {
                                         m.MaintenanceType.charAt(0).toUpperCase() + m.MaintenanceType.slice(1).toLocaleLowerCase()
                                     }
@@ -69,7 +77,14 @@ const MaintenanceClient = ({ maintenances, pageCount }: { maintenances: IMainten
                                 </Badge>
                             </TableCell>
                             <TableCell>
-                                <DataTableRowActions id={m.id} />
+                                <Badge variant={"outline"} className="p-2">
+                                    {
+                                        m.category.charAt(0).toUpperCase() + m.category.slice(1).toLocaleLowerCase()
+                                    }
+                                </Badge>
+                            </TableCell>
+                            <TableCell>
+                                <DataTableRowActions isAdmin={isAdmin} id={m.id} />
                             </TableCell>
                         </TableRow>
                     ))}
@@ -81,7 +96,7 @@ const MaintenanceClient = ({ maintenances, pageCount }: { maintenances: IMainten
 };
 
 
-function GetStatusIcon({ status }: { status: MaintenanceStatus }) {
+export function GetStatusIcon({ status }: { status: MaintenanceStatus }) {
     if (status == "PENDING") {
         return <CircleDot className="mr-2 h-4 w-4 stroke-primary" />
     } else if (status == "INPROGRESS") {

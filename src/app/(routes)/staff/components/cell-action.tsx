@@ -63,7 +63,7 @@ export const CellAction: React.FC<CellActionProps> = ({
         <DropdownMenuContent align="start">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
-          // onClick={() => data.SatffId && router.push(`/${params.Institutionslug}/staff/${data.SatffId}/edit`)}
+            onClick={() => data.SatffId && router.push(`/staff/${data.SatffId}/edit`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>

@@ -1,9 +1,9 @@
 "use client"
 
-import { Maintenance } from "@prisma/client";
-import { Check, MessageSquare, Plus, X } from "lucide-react";
+import { Maintenance, MaintenanceStatus, MaintenanceType } from "@prisma/client";
+import { Check, Loader2, MessageSquare, Plus, X } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -16,12 +16,51 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge";
+import axios from "axios";
+import { env } from "@/env.mjs";
+import { useParams, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { GetStatusIcon } from "../../components/maintenanceClient";
 
 interface IMaintenance extends Maintenance {
-    requestedBy: { name: string }
+    requestedBy: { name: string },
 }
 
-const RequestClient = ({ maintenanceRequests }: { maintenanceRequests: IMaintenance[] }) => {
+const RequestClient = ({ maintenanceRequests, isPrivilageForUpdate }: { maintenanceRequests: IMaintenance[], isPrivilageForUpdate: boolean }) => {
+
+    const [isLoading, setisLoading] = useState(false);
+
+    const params = useParams();
+    const router = useRouter();
+
+
+    async function handleRequestStatus({ id, status }: { id: string, status: MaintenanceStatus }) {
+        setisLoading(true)
+
+        try {
+            const resp = await axios.patch(
+                `${env.NEXT_PUBLIC_APP_URL}/api/maintenance/request`,
+                {
+                    id, status
+                }
+            )
+
+            router.refresh();
+            router.push(`/maintenance/${id}`);
+
+            toast.success(resp.data.msg, {
+                duration: 2000,
+            })
+
+        } catch (error) {
+            toast.error("Something gone wrong", {
+                duration: 2000,
+            })
+        } finally {
+            setisLoading(false)
+        }
+    }
+
     return <div className="h-full flex-1 flex-col space-y-8 rounded-sm border p-4 pt-10 md:flex md:p-8">
         <div className="flex items-center justify-between space-y-2">
             <div>
@@ -55,8 +94,19 @@ const RequestClient = ({ maintenanceRequests }: { maintenanceRequests: IMaintena
                                 </div>
                             </CardHeader>
                             <CardFooter className="flex items-center gap-4 pt-0">
-                                <Button variant={"destructive"}><X className="mr-1 h-4 w-4" /> Reject</Button>
-                                <Button variant={"outline"}><Check className="mr-1 h-4 w-4 stroke-green-500" /> Accept</Button>
+                                {isPrivilageForUpdate ? (<> <Button onClick={() => handleRequestStatus({ id: mr.id, status: "REJECTED" })} variant={"destructive"}>
+                                    {isLoading ? <Loader2 className="h4 w-4 animate-spin" /> : <X className="mr-1 h-4 w-4" />}Reject
+                                </Button>
+                                    <Button onClick={() => handleRequestStatus({ id: mr.id, status: "INPROGRESS" })} variant={"outline"}>
+                                        {isLoading ? <Loader2 className="h4 w-4 animate-spin" /> : <Check className="mr-1 h-4 w-4 stroke-green-500" />} Accept
+                                    </Button>
+                                    <Link href={`/maintenance/${mr.id}`} className={cn(buttonVariants({ variant: "outline" }))}>View</Link>
+                                </>
+                                ) : <Button variant={"secondary"}>
+                                    <GetStatusIcon status={mr.status} />
+                                    {mr.status.charAt(0).toUpperCase() + mr.status.slice(1).toLocaleLowerCase()}
+                                </Button>
+                                }
                             </CardFooter>
                         </Card>
                     ))

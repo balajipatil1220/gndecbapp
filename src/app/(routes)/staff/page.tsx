@@ -94,7 +94,7 @@ async function getTotalUsers() {
         const totalUsers = await db.user.count({})
         return totalUsers
     } catch (error: any) {
-        throw new Error(`[STUDENT server PAGE] Error retrieving user data: ${error.message}`);
+        throw new Error(`[STAFF server PAGE] Error retrieving user data: ${error.message}`);
     }
 }
 

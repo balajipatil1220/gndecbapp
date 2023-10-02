@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
-  phonenumber: z.string().min(10),
+  email: z.string().email(),
   password: z
     .string()
     .min(4)
@@ -34,8 +34,8 @@ const formSchema = z.object({
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 let initialData = {
-  phonenumber: "1234567890",
-  password: "Admin@1234",
+  email: "admin@gmail.com",
+  password: "admin@1234",
 }
 
 export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
@@ -71,18 +71,18 @@ export function UserLoginForm({ className, ...props }: UserAuthFormProps) {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="phonenumber"
+            name="email"
             render={({ field }) => (
               <FormItem>
                 <FormItem className="grid  gap-1">
-                  <FormLabel>Phonenumber</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
-                      id="phonenumber"
+                      id="email"
                       placeholder="name@example.com"
-                      type="phonenumber"
+                      type="email"
                       autoCapitalize="none"
-                      autoComplete="phonenumber"
+                      autoComplete="email"
                       autoCorrect="off"
                       disabled={isLoading}
                       {...field}

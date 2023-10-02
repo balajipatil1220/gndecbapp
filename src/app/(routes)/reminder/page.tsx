@@ -18,6 +18,9 @@ const getData = async (take: number,
                 skip,
                 orderBy: {
                     createdAt: 'desc'
+                },
+                include: {
+                    tags: true,
                 }
 
             });
@@ -28,15 +31,17 @@ const getData = async (take: number,
                 skip,
                 orderBy: {
                     createdAt: 'desc'
+                },
+                include: {
+                    tags: true,
                 }
-
             });
             return remainders;
         }
 
 
     } catch (error: any) {
-        throw new Error(`[STUDENT server PAGE] Error retrieving remainder data: ${error.message}`);
+        throw new Error(`[reminder server PAGE] Error retrieving remainder data: ${error.message}`);
     }
 };
 
@@ -75,7 +80,7 @@ const Reminderpage = async ({
         redirect("/");
     }
 
-    const remainders = await getData(take, skip, query)
+    const remainders = (await getData(take, skip, query)).map(v => ({ ...v, description: v.description as string, duedate: v.duedate.toString() }))
     const totalUsers = await getTotalRemainders()
 
     const pageCount = totalUsers === 0 ? 1 : Math.ceil(totalUsers / take);

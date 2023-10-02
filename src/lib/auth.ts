@@ -25,10 +25,10 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'credentials',
       credentials: {
-        phonenumber: {
-          label: 'Phonenumber',
+        email: {
+          label: 'Email',
           type: 'text',
-          placeholder: 'phonenumber',
+          placeholder: 'email',
         },
         password: {
           label: 'Password',
@@ -37,16 +37,20 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         // check to see if email and password is there
-        if (!credentials?.phonenumber || !credentials?.password) {
+        if (!credentials?.email || !credentials?.password) {
           throw new Error('Please enter an email and password');
         }
+
+        console.log(credentials);
 
         // check to see if user exists
         const user = await db.user.findUnique({
           where: {
-            phonenumber: credentials.phonenumber,
+            email: credentials.email,
           },
         });
+
+        console.log(user);
 
         // if no user was found
         if (!user || !user?.password) {
@@ -94,7 +98,6 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.role = token.role as Role;
-        session.user.phonenumber = token.phonenumber;
       }
 
       return session;
@@ -103,7 +106,7 @@ export const authOptions: NextAuthOptions = {
       const dbUser = await db.user.findFirst({
         where: {
           id: token.id,
-          phonenumber: token.phonenumber,
+          email: token.email as string,
         },
       });
 
@@ -122,7 +125,6 @@ export const authOptions: NextAuthOptions = {
         name: dbUser.name,
         email: dbUser.email,
         role: dbUser.role,
-        phonenumber: dbUser.phonenumber,
       };
     },
   },

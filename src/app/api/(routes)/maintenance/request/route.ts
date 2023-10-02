@@ -13,6 +13,65 @@ import { db } from '@/lib/db';
 import { hasPrivileges, PermissionType } from '@/lib/server-utils';
 import { getCurrentUser } from '@/lib/session';
 
+export async function PATCH(request: Request) {
+  try {
+    const user = await getCurrentUser();
+
+    const json = await request.json();
+    const body = MaintenancePatchSchema.parse(json);
+
+    if (!user) {
+      return new NextResponse('Unauthenticated', { status: 403 });
+    }
+
+    const IsUserExits = await db.user.findFirst({
+      where: {
+        id: user.id,
+      },
+    });
+
+    if (!IsUserExits) {
+      return new NextResponse('Unauthenticated', { status: 403 });
+    }
+
+    if (
+      !(await hasPrivileges(IsUserExits, 'MAINTENANCE', PermissionType.Write))
+    ) {
+      return new NextResponse('Unauthenticated', { status: 403 });
+    }
+
+    const StatusMaintenance = await db.maintenance.update({
+      where: {
+        id: body.id,
+      },
+      data: {
+        status: body.status,
+        MaintenanceAcceptedUser: {
+          create: {
+            userId: user.id,
+            status: body.status,
+          },
+        },
+      },
+    });
+
+    return new NextResponse(
+      JSON.stringify({
+        msg: `maintenance ${
+          body.status == 'REJECTED' ? 'Rejected' : 'Accepted'
+        } Susscesfully`,
+        data: { MaintenanceId: StatusMaintenance.id },
+      }),
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.log('[REMINDER_POST]', error);
+    return new NextResponse(JSON.stringify({ msg: error.message }), {
+      status: 500,
+    });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
@@ -47,7 +106,11 @@ export async function POST(request: Request) {
         MaintenanceType: body.MaintenanceType,
         categoryID: body.categoryID,
         status: 'PENDING',
-        requestedByuserId: user.id,
+        MaintenanceRequestUser: {
+          create: {
+            userId: user.id,
+          },
+        },
       },
     });
 
@@ -71,4 +134,9 @@ const Maintenance = z.object({
   description: z.string().min(2).max(300).optional(),
   MaintenanceType: z.nativeEnum(MaintenanceType),
   categoryID: z.string(),
+});
+
+const MaintenancePatchSchema = z.object({
+  id: z.string(),
+  status: z.nativeEnum(MaintenanceStatus),
 });

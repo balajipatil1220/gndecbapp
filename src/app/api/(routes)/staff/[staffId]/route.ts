@@ -1,55 +1,15 @@
 import { NextResponse } from 'next/server';
-import { env } from '@/env.mjs';
 import { ModuleName } from '@prisma/client';
-import bcrypt from 'bcryptjs';
 import * as z from 'zod';
 
 import { db } from '@/lib/db';
 import { hasPrivileges, PermissionType } from '@/lib/server-utils';
 import { getCurrentUser } from '@/lib/session';
 
-export async function GET(request: Request) {
-  try {
-    const user = await getCurrentUser();
-
-    const { searchParams } = new URL(request.url);
-
-    if (!user) {
-      return new NextResponse('Unauthenticated', { status: 403 });
-    }
-
-    const IsUserExits = await db.user.findFirst({
-      where: {
-        id: user.id,
-      },
-    });
-
-    if (!IsUserExits) {
-      return new NextResponse('Unauthenticated', { status: 403 });
-    }
-
-    if (
-      !(await hasPrivileges(IsUserExits, 'STAFFMODULE', PermissionType.Read))
-    ) {
-      return new NextResponse('Unauthenticated', { status: 403 });
-    }
-
-    const staffs = await db.user.findMany({});
-
-    if (!staffs) {
-      return new NextResponse('staffs not found', { status: 403 });
-    }
-
-    return new NextResponse(JSON.stringify(staffs), { status: 200 });
-  } catch (error: any) {
-    console.log('[Staff_GET]', error);
-    return new NextResponse(JSON.stringify({ msg: error.message }), {
-      status: 500,
-    });
-  }
-}
-
-export async function POST(request: Request) {
+export async function PATCH(
+  request: Request,
+  { params }: { params: { staffId: string } }
+) {
   try {
     const user = await getCurrentUser();
 
@@ -71,30 +31,34 @@ export async function POST(request: Request) {
     }
 
     if (
-      !(await hasPrivileges(IsUserExits, 'STAFFMODULE', PermissionType.Write))
+      !(await hasPrivileges(IsUserExits, 'STAFFMODULE', PermissionType.Update))
     ) {
       return new NextResponse('Unauthenticated', { status: 403 });
     }
 
-    const password = generateStrongPassword();
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash('staff@1234', salt);
-
-    const createdStaff = await db.user.create({
+    const updatedStaff = await db.user.update({
+      where: {
+        id: params.staffId,
+      },
       data: {
         name: body.name,
         email: body.email,
-        password: hashedPassword,
         phonenumber: body.phonenumber,
         gender: body.gender,
         role: body.role,
-
         address: body.address,
         Privilege: {
-          create: {
+          update: {
             permissions: {
-              create: body.Privilege.permissions,
+              updateMany: body.Privilege.permissions.map((permission) => ({
+                where: { moduleName: permission.moduleName },
+                data: {
+                  Read: permission.Read,
+                  Write: permission.Write,
+                  Update: permission.Update,
+                  Delete: permission.Delete,
+                },
+              })),
             },
           },
         },
@@ -104,7 +68,7 @@ export async function POST(request: Request) {
     return new NextResponse(
       JSON.stringify({
         msg: 'Staff Created Susscesfully',
-        data: { staffId: createdStaff.id },
+        data: { staffId: updatedStaff.id },
       }),
       { status: 200 }
     );

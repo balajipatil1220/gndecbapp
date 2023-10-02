@@ -9,7 +9,7 @@ import format from "date-fns/format";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CategoryOperations } from "./categoryActions";
 
-const CategoryClient = ({ categories }: { categories: MaintenanceCategory[] }) => {
+const CategoryClient = ({ categories, isAdmin }: { categories: MaintenanceCategory[], isAdmin: boolean }) => {
     return <>
         <div className="h-full flex-1 flex-col space-y-8 rounded-sm border p-4 pt-10 md:flex md:p-8">
             <div className="flex items-center justify-between space-y-2">
@@ -20,7 +20,7 @@ const CategoryClient = ({ categories }: { categories: MaintenanceCategory[] }) =
                     </p>
                 </div>
                 <div className="flex items-center space-x-2 whitespace-nowrap">
-                    <NewCategoryForm />
+                    {isAdmin ? <NewCategoryForm /> : ""}
                 </div>
             </div>
             <div className="mt-5 h-full ">
@@ -40,7 +40,7 @@ const CategoryClient = ({ categories }: { categories: MaintenanceCategory[] }) =
                                     </div>
 
                                     <div className="flex items-center gap-2">
-                                        <CategoryOperations category={category} />
+                                        {isAdmin ? <CategoryOperations category={category} /> : ""}
                                     </div>
                                 </div>
                             ))

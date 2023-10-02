@@ -71,9 +71,10 @@ model User {
 
   Privilege Privilege?
 
-  createdAt   DateTime      @default(now()) @map(name: "created_at")
-  updatedAt   DateTime      @default(now()) @map(name: "updated_at")
-  Maintenance Maintenance[]
+  createdAt               DateTime                  @default(now()) @map(name: "created_at")
+  updatedAt               DateTime                  @default(now()) @map(name: "updated_at")
+  MaintenanceRequestUser  MaintenanceRequestUser[]
+  MaintenanceAcceptedUser MaintenanceAcceptedUser[]
 
   @@map(name: "users")
 }
@@ -158,23 +159,55 @@ model RemainderTags {
 }
 
 model Maintenance {
-  id                  String              @id @default(auto()) @map("_id") @db.ObjectId
-  name                String
-  description         String?
-  categoryID          String              @db.ObjectId
-  MaintenanceType     MaintenanceType
-  requestedByuserId   String              @db.ObjectId
-  status              MaintenanceStatus
-  imageURL            String?
-  MaintenanceRemarks  MaintenanceRemarks?
-  requestedBy         User                @relation(fields: [requestedByuserId], references: [id], onDelete: Cascade)
+  id                      String                    @id @default(auto()) @map("_id") @db.ObjectId
+  name                    String
+  description             String?
+  categoryID              String                    @db.ObjectId
+  MaintenanceType         MaintenanceType
+  status                  MaintenanceStatus
+  imageURL                String?
+  MaintenanceRemarks      MaintenanceRemarks?
+  MaintenanceRequestUser  MaintenanceRequestUser?
+  MaintenanceAcceptedUser MaintenanceAcceptedUser[]
+
   maintenanceCategory MaintenanceCategory @relation(fields: [categoryID], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+}
+
+model MaintenanceRequestUser {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String @db.ObjectId
+  maintenanceId String @unique @db.ObjectId
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  maintenance Maintenance @relation(fields: [maintenanceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+}
+
+model MaintenanceAcceptedUser {
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String            @db.ObjectId
+  maintenanceId String            @db.ObjectId
+  status        MaintenanceStatus
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  maintenance Maintenance @relation(fields: [maintenanceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
 }
 
 model MaintenanceCategory {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   Maintenance Maintenance[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
 }
 
 enum MaintenanceType {
@@ -195,4 +228,7 @@ model MaintenanceRemarks {
   maintenanceId String      @unique @db.ObjectId
   text          String
   maintenance   Maintenance @relation(fields: [maintenanceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
 }
