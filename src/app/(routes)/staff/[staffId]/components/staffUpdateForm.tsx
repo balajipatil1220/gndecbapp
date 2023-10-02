@@ -144,7 +144,7 @@ const UpdateStaffForm = ({ data }: { data: z.infer<typeof StaffformSchema> }) =>
                     <Button size={"sm"} onClick={() => router.back()} variant={"ghost"} className="flex items-center gap-2">
                         <ArrowLeft className="h-4 w-4" />
                     </Button>
-                    <h2 className="text-2xl font-medium tracking-tight text-primary">Add Staff</h2>
+                    <h2 className="text-2xl font-medium tracking-tight text-primary">Update Staff</h2>
                 </div>
                 <div className="flex items-center gap-2">
                     <Button size={"sm"} variant={"outline"} className="flex items-center">
@@ -169,7 +169,7 @@ const UpdateStaffForm = ({ data }: { data: z.infer<typeof StaffformSchema> }) =>
                                             id="name"
                                             placeholder="Name"
                                             type="text"
-                                            disabled={isloading}
+                                            disabled={isloading || data.role == "SUPERADMIN"}
                                             {...field}
                                         />
                                     </FormControl>
@@ -188,7 +188,7 @@ const UpdateStaffForm = ({ data }: { data: z.infer<typeof StaffformSchema> }) =>
                                             id="email"
                                             placeholder="Email"
                                             type="email"
-                                            disabled={isloading}
+                                            disabled={isloading || data.role == "SUPERADMIN"}
                                             {...field}
                                         />
                                     </FormControl>
@@ -207,7 +207,7 @@ const UpdateStaffForm = ({ data }: { data: z.infer<typeof StaffformSchema> }) =>
                                             id="phonenumber"
                                             placeholder="Phone number"
                                             type="number"
-                                            disabled={isloading}
+                                            disabled={isloading || data.role == "SUPERADMIN"}
                                             className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                                             {...field}
                                         />
@@ -227,7 +227,7 @@ const UpdateStaffForm = ({ data }: { data: z.infer<typeof StaffformSchema> }) =>
                                             id="address"
                                             placeholder="Address"
                                             type="text"
-                                            disabled={isloading}
+                                            disabled={isloading || data.role == "SUPERADMIN"}
                                             {...field}
                                         />
                                     </FormControl>
@@ -254,8 +254,8 @@ const UpdateStaffForm = ({ data }: { data: z.infer<typeof StaffformSchema> }) =>
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="STAFF">STAFF</SelectItem>
-                                            <SelectItem value="ADMIN">Admin</SelectItem>
+                                            <SelectItem disabled={data.role == "SUPERADMIN"} value="STAFF">STAFF</SelectItem>
+                                            <SelectItem disabled={data.role == "SUPERADMIN"} value="ADMIN">Admin</SelectItem>
                                             <SelectItem disabled value="SUPERADMIN">Superadmin</SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -277,9 +277,9 @@ const UpdateStaffForm = ({ data }: { data: z.infer<typeof StaffformSchema> }) =>
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="MALE">Male</SelectItem>
-                                            <SelectItem value="FEMALE">Female</SelectItem>
-                                            <SelectItem value="OTHERS">Others</SelectItem>
+                                            <SelectItem disabled={data.role == "SUPERADMIN"} value="MALE">Male</SelectItem>
+                                            <SelectItem disabled={data.role == "SUPERADMIN"} value="FEMALE">Female</SelectItem>
+                                            <SelectItem disabled={data.role == "SUPERADMIN"} value="OTHERS">Others</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -293,7 +293,7 @@ const UpdateStaffForm = ({ data }: { data: z.infer<typeof StaffformSchema> }) =>
 
 
                         <div className="col-span-full space-x-4">
-                            <Button type="submit" disabled={isloading} className="md:w-30 col-span-full">
+                            <Button type="submit" disabled={isloading || data.role == "SUPERADMIN"} className="md:w-30 col-span-full">
                                 {isloading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Update
                             </Button>
@@ -307,7 +307,7 @@ const UpdateStaffForm = ({ data }: { data: z.infer<typeof StaffformSchema> }) =>
                 </Form>
             </div>
 
-            <Password />
+            {data.role != "SUPERADMIN" && <Password />}
 
         </div>
     </>

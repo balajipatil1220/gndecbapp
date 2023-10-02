@@ -25,7 +25,7 @@ interface IMaintenance extends Maintenance {
 }
 
 const MaintenanceClient = ({ maintenances, pageCount, isAdmin }: { maintenances: IMaintenance[], pageCount: number, isAdmin: boolean }) => {
-    return <div className="h-full flex-1 flex-col space-y-8 p-1 pt-4 md:flex md:rounded-sm md:border md:p-8 md:pt-10">
+    return <div className="h-full flex-1 flex-col space-y-8 p-3 pt-4 md:flex md:rounded-sm md:border md:p-8 md:pt-10">
         <div className="flex items-center justify-between space-y-2">
             <div>
                 <h2 className="flex items-center gap-2 text-lg font-bold md:text-2xl ">Maintenances <Settings2 className="h-4 w-4 stroke-primary md:h-auto md:w-auto" /></h2>
@@ -34,7 +34,7 @@ const MaintenanceClient = ({ maintenances, pageCount, isAdmin }: { maintenances:
                 </p>
             </div>
             <div className="flex items-center space-x-2 whitespace-nowrap">
-                <Link href={"/maintenance/request/add"} className={cn(buttonVariants({}))}>
+                <Link href={"/maintenance/request/add"} className={cn(buttonVariants({ size: "sm" }))}>
                     <Plus className="h4 mr-2 w-4 " />  Make Request
                 </Link>
             </div>
@@ -48,21 +48,29 @@ const MaintenanceClient = ({ maintenances, pageCount, isAdmin }: { maintenances:
                     <TableRow>
                         <TableHead>Title</TableHead>
                         {/* <TableHead>Description</TableHead> */}
-                        <TableHead>Requested By</TableHead>
-                        <TableHead>Type</TableHead>
                         <TableHead className="text-center">Status</TableHead>
+                        <TableHead>Requested By</TableHead>
+                        <TableHead className="text-center">Type</TableHead>
                         <TableHead className="text-center">Category</TableHead>
+                        <TableHead className="text-center"></TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {maintenances.map((m, i) => (
                         <TableRow key={m.id} className={cn(i % 2 ? "bg-muted/50 hover:bg-transparent" : "hover:bg-muted/100")}>
                             <TableCell className="font-medium"><span className="md:hidden">{i + 1})</span> {m.name}</TableCell>
+                            <TableCell className="flex items-center justify-center gap-2">
+                                <Badge variant={"outline"} className="p-2">
+                                    <GetStatusIcon status={m.status} />
+                                    {m.status.charAt(0).toUpperCase() + m.status.slice(1).toLocaleLowerCase()}
+                                </Badge>
+                            </TableCell>
                             <TableCell> {m.requestedBy.name}</TableCell>
                             {/* <TableCell>
                                 {m.description?.slice(0, 50)}
                                 {m.description && m.description?.length > 50 ? "..." : ""}
                             </TableCell> */}
+
                             <TableCell >
                                 <Badge variant={"outline"} className="p-2">
                                     {
@@ -70,12 +78,7 @@ const MaintenanceClient = ({ maintenances, pageCount, isAdmin }: { maintenances:
                                     }
                                 </Badge>
                             </TableCell>
-                            <TableCell className="flex items-center justify-center gap-2">
-                                <Badge variant={"outline"} className="p-2">
-                                    <GetStatusIcon status={m.status} />
-                                    {m.status.charAt(0).toUpperCase() + m.status.slice(1).toLocaleLowerCase()}
-                                </Badge>
-                            </TableCell>
+
                             <TableCell>
                                 <Badge variant={"outline"} className="p-2">
                                     {

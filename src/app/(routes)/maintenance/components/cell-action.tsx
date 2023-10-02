@@ -42,6 +42,7 @@ export function DataTableRowActions({ id, isAdmin }: { id: string, isAdmin: bool
         } finally {
             setOpen(false);
             setLoading(false);
+            location.reload()
         }
     };
 

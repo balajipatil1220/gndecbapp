@@ -40,7 +40,7 @@ const Search = ({ search }: { search?: string }) => {
         <div className="flex items-center gap-2">
             <Input
                 value={text}
-                placeholder='Search name...'
+                placeholder='Search ...'
                 disabled={isPending}
                 onChange={e => setText(e.target.value)}
                 className={cn(`h-8 lg:w-[250px]`)}

@@ -20,15 +20,15 @@ export default async function Home() {
   return (
     <>
       <div className="flex-col">
-        <div className="flex-1 space-y-4 p-2">
-          <Heading title="Dashboard" description="Overview" />
+        <div className="flex-1 space-y-4 p-4 md:p-2">
+          <Heading title="Dashboard" description="Overview of Remainders, Maintenance ,Staffs" />
           <Separator />
 
           <div className="flex flex-col gap-6">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              <Card className="shadow-md">
+              <Card className="border shadow-md">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
+                  <CardTitle className="text-base font-medium">
                     Reminders
                   </CardTitle>
                   <Bell className="h-6 w-6 text-muted-foreground" />
@@ -41,9 +41,9 @@ export default async function Home() {
                 </CardContent>
               </Card>
 
-              <Card className="shadow-md">
+              <Card className="border shadow-md">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
+                  <CardTitle className="text-base font-medium">
                     Maintenance
                   </CardTitle>
                   <Settings2 className="h-6 w-6 text-muted-foreground" />
@@ -56,9 +56,9 @@ export default async function Home() {
                 </CardContent>
               </Card>
 
-              <Card className="shadow-md">
+              <Card className="border shadow-md">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
+                  <CardTitle className="text-base  font-medium">
                     Staffs
                   </CardTitle>
                   <Users className="h-6 w-6 text-muted-foreground" />
@@ -72,8 +72,8 @@ export default async function Home() {
               </Card>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 space-y-10 rounded-sm border p-8 shadow-md md:grid-cols-2 md:space-y-0">
-              <div className="col-span-1 flex max-w-sm flex-col gap-4">
+            <div className="grid grid-cols-1 gap-4 space-y-10 md:grid-cols-2 md:space-y-0">
+              <div className="col-span-1 flex flex-col gap-4 rounded-md border p-8 shadow-md">
                 <h3 className="text-xl font-medium md:text-3xl">Reminders</h3>
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">
@@ -101,7 +101,7 @@ export default async function Home() {
                 </div>
               </div>
 
-              <div className="col-span-1 flex max-w-sm  flex-col gap-4" >
+              <div className="col-span-1 flex  flex-col gap-4 rounded-md border p-8 shadow-md" >
                 <h3 className="text-xl font-medium md:text-3xl">Maintenance</h3>
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">

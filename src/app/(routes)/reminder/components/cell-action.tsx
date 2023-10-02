@@ -29,7 +29,7 @@ interface RemainderSchema extends z.infer<typeof RemainderformSchema> {
     id: string
 }
 
-export function DataTableRowActions({ data }: { data: RemainderSchema }) {
+export function DataTableRowActions({ data, isAdmin }: { data: RemainderSchema, isAdmin: boolean }) {
     const router = useRouter();
     const params = useParams();
     const [open, setOpen] = useState(false);
@@ -46,6 +46,7 @@ export function DataTableRowActions({ data }: { data: RemainderSchema }) {
         } finally {
             setOpen(false);
             setLoading(false);
+            location.reload()
         }
     };
 
@@ -54,12 +55,14 @@ export function DataTableRowActions({ data }: { data: RemainderSchema }) {
         <>
             <AlertModal
                 isOpen={open}
-                onClose={() => setOpen(false)}
+                onClose={() => {
+                    setOpen(false)
+                    location.reload()
+                }}
                 onConfirm={onConfirm}
                 loading={loading}
                 description="This data will be deleted permanent"
             />
-
 
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -71,14 +74,14 @@ export function DataTableRowActions({ data }: { data: RemainderSchema }) {
                         <span className="sr-only">Open menu</span>
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="">
+                {isAdmin && <DropdownMenuContent align="end" className="">
                     <DropdownMenuItem onClick={() => router.push(`/reminder/${data.id}/edit`)}>  <Edit className="mr-2 h-4 w-4" /> Update</DropdownMenuItem>
                     <DropdownMenuItem><Pin className="mr-2 h-4 w-4" /> Pin</DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setOpen(true)}>
                         <Trash className="mr-2 h-4 w-4" /> Delete
                     </DropdownMenuItem>
-                </DropdownMenuContent>
+                </DropdownMenuContent>}
             </DropdownMenu>
         </>
     )

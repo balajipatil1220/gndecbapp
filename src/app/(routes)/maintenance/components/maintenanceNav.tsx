@@ -25,7 +25,7 @@ const examples = [
     },
     {
         name: "Settings",
-        href: "/afjl",
+        href: "/setting",
         icon: Settings,
     },
 ]
@@ -35,6 +35,16 @@ interface MaintenanceNavProps extends React.HTMLAttributes<HTMLDivElement> { }
 export function MaintenanceNav({ className, ...props }: MaintenanceNavProps) {
     const pathname = usePathname()
     const params = useParams()
+
+
+    function isActive(href: string) {
+        if (href == '' && pathname.split('/')
+            .filter(crumb => crumb !== '').length == 1) {
+            return true
+        }
+        return pathname.split('/')
+            .filter(crumb => crumb !== '').includes(href)
+    }
 
     return (
         <div className="relative">
@@ -46,7 +56,7 @@ export function MaintenanceNav({ className, ...props }: MaintenanceNavProps) {
                             key={example.href}
                             className={cn(
                                 "flex items-center whitespace-nowrap rounded-md p-2 hover:bg-muted/60 ",
-                                pathname?.startsWith(`/maintenance${example.href}`)
+                                isActive(example.href.replace('/', ''))
                                     ? "bg-muted font-bold text-primary"
                                     : "font-medium text-muted-foreground"
                             )}

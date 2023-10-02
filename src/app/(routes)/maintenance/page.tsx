@@ -29,7 +29,7 @@ async function getTotalMaintenances(userId?: string) {
         })
         return totalUsers
     } catch (error: any) {
-        throw new Error(`[STUDENT server PAGE] Error retrieving user data: ${error.message}`);
+        throw new Error(`[Maintenance server PAGE] Error retrieving user data: ${error.message}`);
     }
 }
 

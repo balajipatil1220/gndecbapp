@@ -12,33 +12,31 @@ const getData = async (take: number,
 
     try {
 
+        let Query = {};
         if (query) {
-            const remainders = await db.remainder.findMany({
-                take,
-                skip,
-                orderBy: {
-                    createdAt: 'desc'
-                },
-                include: {
-                    tags: true,
-                }
-
-            });
-            return remainders;
-        } else {
-            const remainders = await db.remainder.findMany({
-                take,
-                skip,
-                orderBy: {
-                    createdAt: 'desc'
-                },
-                include: {
-                    tags: true,
-                }
-            });
-            return remainders;
+            Query = {
+                OR: [
+                    {
+                        title: { contains: query, mode: 'insensitive' },
+                    },
+                ],
+            };
         }
 
+        const remainders = await db.remainder.findMany({
+            take,
+            skip,
+            where: {
+                ...Query
+            },
+            orderBy: {
+                createdAt: 'desc'
+            },
+            include: {
+                tags: true,
+            }
+        });
+        return remainders;
 
     } catch (error: any) {
         throw new Error(`[reminder server PAGE] Error retrieving remainder data: ${error.message}`);
@@ -65,7 +63,7 @@ const Reminderpage = async ({
     const { page, per_page, query } = searchParams;
 
     // Number of records to show per page
-    const take = typeof per_page === "string" ? parseInt(per_page) : 10;
+    const take = typeof per_page === "string" ? parseInt(per_page) : 5;
 
     // Number of records to skip
     const skip = typeof page === "string" ? (parseInt(page) - 1) * take : 0;
@@ -85,8 +83,10 @@ const Reminderpage = async ({
 
     const pageCount = totalUsers === 0 ? 1 : Math.ceil(totalUsers / take);
 
+    const isAdmin = (user?.role == "ADMIN" || user?.role == "SUPERADMIN") ? true : false
+
     return <>
-        <RemainderClient remainders={remainders} pageCount={pageCount} />
+        <RemainderClient isAdmin={isAdmin} remainders={remainders} pageCount={pageCount} />
     </>
 };
 

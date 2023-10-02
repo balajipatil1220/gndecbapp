@@ -35,7 +35,8 @@ export const CellAction: React.FC<CellActionProps> = ({
       setLoading(true);
       await axios.delete(`/api/staff/${data.SatffId}`);
       toast.success('Staff deleted.');
-      router.refresh();
+      router.push("/staff");
+      location.reload()
     } catch (error) {
       toast.error('Something Gone Wrong');
     } finally {
@@ -48,7 +49,10 @@ export const CellAction: React.FC<CellActionProps> = ({
     <>
       <AlertModal
         isOpen={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          location.reload()
+        }}
         onConfirm={onConfirm}
         loading={loading}
         description="This data will be deleted permanent"
@@ -60,7 +64,7 @@ export const CellAction: React.FC<CellActionProps> = ({
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
+        {data.role !== "SUPERADMIN" && <DropdownMenuContent align="start">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
             onClick={() => data.SatffId && router.push(`/staff/${data.SatffId}/edit`)}
@@ -72,7 +76,7 @@ export const CellAction: React.FC<CellActionProps> = ({
           >
             <Trash className="mr-2 h-4 w-4" /> Delete
           </DropdownMenuItem>
-        </DropdownMenuContent>
+        </DropdownMenuContent>}
       </DropdownMenu>
     </>
   );

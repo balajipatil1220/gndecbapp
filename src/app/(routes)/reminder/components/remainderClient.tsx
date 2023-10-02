@@ -24,12 +24,13 @@ import { Badge } from "@/components/ui/badge";
 import ReminderPagination from "../../../../components/pagination";
 import { DataTableRowActions } from "./cell-action";
 import { RemainderformSchema } from "./reminderEditForm";
+import Search from "@/components/data-table/search";
 
 interface RemainderSchema extends z.infer<typeof RemainderformSchema> {
     id: string
 }
 
-const RemainderClient = ({ remainders, pageCount }: { remainders: RemainderSchema[], pageCount: number }) => {
+const RemainderClient = ({ remainders, pageCount, isAdmin }: { remainders: RemainderSchema[], pageCount: number, isAdmin: boolean }) => {
 
     const router = useRouter()
 
@@ -43,12 +44,15 @@ const RemainderClient = ({ remainders, pageCount }: { remainders: RemainderSchem
                     </p>
                 </div>
                 <div className="flex items-center space-x-2 whitespace-nowrap">
-                    <Link href={"/reminder/add"} className={cn(buttonVariants({}))}>
+                    <Link href={"/reminder/add"} className={cn(buttonVariants({ size: "sm" }))}>
                         Add new Remainder
                     </Link>
                 </div>
             </div>
-            <div className="mt-5 whitespace-nowrap rounded-lg border shadow-md">
+            <div className="w-full">
+                <Search />
+            </div>
+            <div className="mt-5 whitespace-nowrap md:rounded-lg md:border md:shadow-md">
                 <Table className="">
                     <TableHeader>
                         <TableRow>
@@ -74,7 +78,7 @@ const RemainderClient = ({ remainders, pageCount }: { remainders: RemainderSchem
                                     </Badge>
                                 </TableCell>
                                 <TableCell>
-                                    <DataTableRowActions data={remainder} />
+                                    <DataTableRowActions isAdmin={isAdmin} data={remainder} />
                                 </TableCell>
                             </TableRow>
                         ))}
