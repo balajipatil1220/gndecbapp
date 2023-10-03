@@ -112,7 +112,7 @@ const ProfileDetails = () => {
             <div className="pf-user-back">
                 <div className="profile-conatiner flex h-full w-full items-center justify-start gap-4 bg-gradient-to-r via-transparent p-4">
                     <div className="profile-img">
-                        <Avatar className="h-14 w-14 md:h-20 md:w-20">
+                        <Avatar className="h-10 w-10 md:h-20 md:w-20">
                             <AvatarImage src="/avatars/03.png" />
                             <AvatarFallback className="bg-primary/80 text-white md:text-4xl">
                                 {name.charAt(0).toUpperCase()}
@@ -122,19 +122,19 @@ const ProfileDetails = () => {
                     <div className="profile-content flex flex-1 items-center justify-between">
                         <div className="user-details flex items-center">
                             <div>
-                                <h1 className="font-semibold md:text-xl">
+                                <h1 className="text-sm font-semibold md:text-xl">
                                     {name}
                                 </h1>
-                                <h2 className="md:text-xl">{email}</h2>
-                                <h2 className="md:text-xl">{phoneNumber}</h2>
+                                <h2 className="text-sm md:text-xl">{email}</h2>
+                                <h2 className="text-sm md:text-xl">{phoneNumber}</h2>
                             </div>
                             <div className="ml-6">
                             </div>
                         </div>
-                        <div className="w-full">
+                        <div className="">
                             {
-                                !isProfileDetailsEditing ? <Button disabled={isloading} variant={"outline"} onClick={() => setisProfileDetailsEditing(true)}>  <Edit2 className="mr-2 h-4 w-4" />Edit</Button> : <>
-                                    <Button disabled={isloading} onClick={() => setisProfileDetailsEditing(false)}>
+                                !isProfileDetailsEditing ? <Button size={"sm"} disabled={isloading} variant={"outline"} onClick={() => setisProfileDetailsEditing(true)}>  <Edit2 className="mr-2 h-4 w-4" />Edit</Button> : <>
+                                    <Button size={"sm"} disabled={isloading} onClick={() => setisProfileDetailsEditing(false)}>
                                         {isloading && <Loader2 className="h-4 w-4 animate-spin" />}  Save</Button>
 
                                 </>

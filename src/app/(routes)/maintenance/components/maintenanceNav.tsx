@@ -39,11 +39,11 @@ export function MaintenanceNav({ className, ...props }: MaintenanceNavProps) {
 
     function isActive(href: string) {
         if (href == '' && pathname.split('/')
-            .filter(crumb => crumb !== '').length == 1) {
+            .filter(link => link !== '').length == 1) {
             return true
         }
         return pathname.split('/')
-            .filter(crumb => crumb !== '').includes(href)
+            .filter(link => link !== '').includes(href)
     }
 
     return (

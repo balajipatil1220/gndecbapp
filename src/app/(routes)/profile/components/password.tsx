@@ -110,7 +110,7 @@ const Password = () => {
         <div className="password-conatiner m-4 flex flex-col  justify-center">
             <div className="web-links-top flex items-center justify-between p-4">
                 <h3 className="text-text-color2 text-xl font-bold">
-                    PASSWORD & SECURITY
+                    Password
                 </h3>
 
                 {

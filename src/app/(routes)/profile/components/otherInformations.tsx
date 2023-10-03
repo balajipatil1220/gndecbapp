@@ -97,18 +97,18 @@ const OtherInformations = () => {
     return <>
 
         <div className="professional-info-conatiner m-4 flex flex-col  justify-center">
-            <div className="web-links-top flex items-center justify-between p-4">
-                <h3 className="text-xl font-bold">
+            <div className="web-links-top flex flex-wrap justify-between gap-2 p-4">
+                <h3 className="whitespace-nowrap text-xl font-bold">
                     Profile Details
                 </h3>
                 {
                     !isOtherProfileDetailsEditing ? <Button disabled={isloading} variant={"outline"} onClick={() => setisOtherProfileDetailsEditing(true)}>
                         <Edit2 className="mr-2 h-4 w-4" />Edit
-                    </Button> : <div className="space-x-2">
-                        <Button disabled={isloading} onClick={() => onSubmit({ gender: form.watch("gender"), address: form.watch("address") })}>
+                    </Button> : <div className="flex flex-row-reverse flex-wrap items-center gap-2 md:flex-row">
+                        <Button size={"sm"} disabled={isloading} onClick={() => onSubmit({ gender: form.watch("gender"), address: form.watch("address") })}>
                             {isloading && <Loader2 className="h-4 w-4 animate-spin" />}   Save
                         </Button>
-                        <Button variant={"outline"} disabled={isloading} onClick={() => { setisOtherProfileDetailsEditing(false) }}>Cancel</Button>
+                        <Button size={"sm"} variant={"outline"} disabled={isloading} onClick={() => { setisOtherProfileDetailsEditing(false) }}>Cancel</Button>
                     </div>
 
                 }

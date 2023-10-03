@@ -68,8 +68,8 @@ const MaintenancePage = async ({ params }: {
                     </p>
                 </div>
                 <div className="flex items-center space-x-2 whitespace-nowrap">
-                    {(user?.role === "ADMIN" || user?.role === "SUPERADMIN") ? <Link href={"/maintenance/request/add"} className={cn(buttonVariants({}))}>
-                        <Edit className="h4 mr-2 w-4 " />Edit  Maintenance
+                    {(user?.role === "ADMIN" || user?.role === "SUPERADMIN") ? <Link href={`/maintenance/${params.maintenanceId}/edit`} className={cn(buttonVariants({ size: "sm" }))}>
+                        <Edit className="h4 mr-2 w-4 " />Edit <span className="hidden md:inline">maintenance</span>
                     </Link>
                         : ""
                     }
@@ -132,17 +132,18 @@ const MaintenancePage = async ({ params }: {
                             <h4 className="text-left text-xl font-[400] tracking-wide">Activities</h4>
                             <div className="space-y-4 border-t py-2">
                                 <div className="flex flex-row-reverse items-center justify-between">
-                                    <h4 className="text-left text-sm font-medium tracking-wide md:text-base">User</h4>
+                                    <h4 className="text-sm font-medium tracking-wide md:text-base">User</h4>
                                     <span className="text-sm font-medium tracking-wide md:text-base">Status</span>
                                 </div>
                                 <div className="grid gap-6">
                                     {
                                         <div className="flex flex-row-reverse items-center justify-between gap-2">
                                             <div className="flex flex-row-reverse items-center gap-2">
-                                                <Avatar className="">
+                                                <Avatar className="hidden sm:block">
                                                     <AvatarImage src="/avatars/03.png" />
                                                     <AvatarFallback className="bg-primary/80 text-white">{maintenance.MaintenanceRequestUser?.user.name.charAt(0)}</AvatarFallback>
                                                 </Avatar>
+
                                                 <div>
                                                     <p className="text-sm font-medium leading-none">
                                                         {maintenance.MaintenanceRequestUser?.user.name}
