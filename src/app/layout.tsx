@@ -12,7 +12,8 @@ const poppins = Poppins({ weight: "400", subsets: ["devanagari"] });
 export const metadata: Metadata = {
   title: "Gndecb App",
   description: "Gndecb App",
-  manifest: '/manifest.webmanifest'
+  manifest: "/manifest.json",
+  themeColor: "#ffffff",
 }
 
 export default function RootLayout({
