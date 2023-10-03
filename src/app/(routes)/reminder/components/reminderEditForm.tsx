@@ -173,7 +173,7 @@ const RemainderEditForm = ({ data }: { data: z.infer<typeof RemainderformSchema>
                             <FormLabel>Status</FormLabel>
                             <FormDescription className="text-xs">current status of remainder</FormDescription>
 
-                            <SingleSelect onValueChange={field.onChange} defaultValue={"PENDING"}>
+                            <SingleSelect onValueChange={field.onChange} value={field.value}>
                                 <FormControl>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select Status" />
